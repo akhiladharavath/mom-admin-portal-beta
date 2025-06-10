@@ -1,5 +1,4 @@
 import { Stack, TextField, Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import ReusableTable from '../../components/TableComponent/TableComponent';
 
 const columns = [
@@ -21,12 +20,12 @@ const rows = [
 ];
 
 function CategoryHeader() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   return (
     <Stack direction="row" spacing={2} marginBottom={2}>
       <TextField label="Search" variant="outlined" />
       <Button
-        onClick={() => navigate('/forms')}
+        // onClick={() => navigate('/forms')}
         variant="contained"
         sx={{ backgroundColor: '#05a99d' }}
       >

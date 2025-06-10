@@ -4,6 +4,7 @@ import CustomizedTables from './components/customisedtable';
 import MedicinesCategory from './pages/MedicinesCategory'
 import Category from './pages/Categores/CustomizedTables'
 import SubCategory from './pages/Categores/sub'
+import Forms from './pages/Categores/forms'
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
       <Route path='/medicines' Component={MedicinesCategory} />
       <Route path='/category' Component={Category} />
       <Route path='/subCategory' Component={SubCategory} />
+      <Route path='/forms' Component={Forms} />
 
     </Routes>
   )
