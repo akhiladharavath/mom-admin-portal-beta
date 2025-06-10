@@ -14,8 +14,7 @@ function App() {
       <Route path='/medicines' Component={MedicinesCategory} />
       <Route path='/category' Component={Category} />
       <Route path='/subCategory' Component={SubCategory} />
-      <Route path='/forms' Component={Forms} />
-
+      <Route path='forms' Component={Forms}/>
     </Routes>
   )
 }

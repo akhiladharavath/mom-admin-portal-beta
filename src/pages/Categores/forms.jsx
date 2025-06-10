@@ -1,30 +1,53 @@
-import React, { useState, useEffect } from 'react';
+// <<<<<<< main
+// import React, { useState, useEffect } from 'react';
+
+// function MyComponent() {
+//   const [formData, setFormData] = useState({
+//     subcategory_name: '',
+//     category: ''
+//   });
+//   const [categories, setCategories] = useState([]);
+//   const [loading, setLoading] = useState(false);
+
+//   useEffect(() => {
+//     fetchCategories();
+//   }, []);
+
+//   const fetchCategories = async () => {
+//     try {
+//       const response = await fetch('http://localhost:3000/api/medicines/categories');
+//       if (response.ok) {
+//         const data = await response.json();
+//         setCategories(data);
+//       } else {
+//         console.error('Failed to fetch categories');
+//       }
+//     } catch (error) {
+//       console.error('Error fetching categories:', error);
+//     }
+//   };
+// =======
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function MyComponent() {
+  // const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [formData, setFormData] = useState({
-    subcategory_name: '',
-    category: ''
+    category_name: '',
+ 
   });
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const {id} = useParams();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/api/medicines/categories');
-      if (response.ok) {
-        const data = await response.json();
-        setCategories(data);
-      } else {
-        console.error('Failed to fetch categories');
-      }
-    } catch (error) {
-      console.error('Error fetching categories:', error);
+  useEffect(()=>{
+    if(id){
+            fetch(`http://localhost:3000/api/medicines/categories/${id}`)
+        .then(res => res.json())
+        .then(data => setFormData({ category_name: data.category_name }))
+        .catch(() => {});
     }
-  };
+  },[id])
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,6 +59,7 @@ function MyComponent() {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
+
     setLoading(true);
     try {
       const response = await fetch('http://localhost:3000/api/medicines/subcategories', {
@@ -64,6 +88,33 @@ function MyComponent() {
     } finally {
       setLoading(false);
     }
+    
+    
+  }}
+ const handleSubmit1 = async(e) => {
+
+   try {
+     
+     
+    const response = await fetch('http://localhost:3000/api/medicines/categories', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Category created:', data);
+
+      setFormData({ category_name:'' });
+    } else {
+      console.error('Failed to create category');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+  
   };
 
   return (
@@ -82,8 +133,9 @@ function MyComponent() {
                   <label className="leading-loose">SubCategory Name</label>
                   <input
                     type="text"
-                    name="subcategory_name"
-                    value={formData.subcategory_name}
+
+                    name="category_name"
+                    value={formData.category_name}
                     onChange={handleChange}
                     className="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-black-600"
                     placeholder="Enter subcategory name"
@@ -119,6 +171,7 @@ function MyComponent() {
                   }`}
                 >
                   {loading ? 'Creating...' : 'Create SubCategory'}
+
                 </button>
               </div>
             </form>
