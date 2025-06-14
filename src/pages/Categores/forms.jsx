@@ -83,7 +83,7 @@ function MyComponent() {
                 <button
                   // type="submit"
                   
-                  className="bg-green-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none "
+                  className="bg-teal-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none "
                   type="submit">{id ? 'Update' : 'Create'}
                 
                   Create Category

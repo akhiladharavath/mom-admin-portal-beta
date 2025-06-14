@@ -36,11 +36,11 @@ export default function CategoryModal({ isOpen, onClose, onAdded }) {
           onChange={e => setName(e.target.value)}
           placeholder="Category name"
           required
-          className="w-full mb-4 px-3 py-2 border rounded"
+          className="w-full mb-4 px-3 py-2 border-gray-7w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400"
         />
         <button
           type="submit"
-          className="w-full bg-green-500 text-white py-2 rounded disabled:opacity-50"
+          className="w-full bg-teal-700 text-white py-2 rounded disabled:opacity-50"
           disabled={loading}
         >
           {loading ? 'Adding...' : 'Add Category'}

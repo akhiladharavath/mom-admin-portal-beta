@@ -50,30 +50,32 @@ export default function SubCategoryModal({ isOpen, onClose, categories, onAdded 
           onChange={handleChange}
           placeholder="Subcategory name"
           required
-          className="w-full mb-2 px-3 py-2 border rounded"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 m-2"
         />
         <select
           name="category"
           value={form.category}
           onChange={handleChange}
           required
-          className="w-full mb-2 px-3 py-2 border rounded"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 m-2"
         >
           <option value="">Select category</option>
           {categories.map(c => (
             <option key={c._id} value={c._id}>{c.category_name}</option>
           ))}
         </select>
+       
         <input
           type="file"
           name="imageFile"
           accept="image/*"
           onChange={handleChange}
-          className="w-full mb-4"
+          className="w-full mb-4 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-teal-400 m-2"
         />
+        
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded disabled:opacity-50"
+          className="w-full bg-teal-700 text-white py-2 rounded disabled:opacity-50 m-2"
           disabled={loading}
         >
           {loading ? 'Adding...' : 'Add SubCategory'}
