@@ -4,6 +4,7 @@ import SubReusableTable from "../../components/TableComponent/SubTableComponent"
 import * as React from "react";
 import { useState, useEffect } from "react";
 import DeleteAlert from "../../components/Medicines/Deletealert";
+import apiClient from "../../utils/apiClient";
 
 const columns = [
   { id: "_id", label: "Sub-Category ID", minWidth: 70 },
@@ -48,10 +49,9 @@ function SubCategories() {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/medicine/categories");
-      const data = await res.json();
-      if (res.ok) {
-        setCategories(data);
+      const response = await apiClient("/api/medicine/categories");
+      if (response) {
+        setCategories(response);
       } else {
         console.error("Failed to fetch categories");
       }
@@ -62,18 +62,18 @@ function SubCategories() {
 
   const fetchSubCategories = async (id = "") => {
     try {
-      let url = "http://localhost:3000/api/medicines/subcategories";
+      let url = "/api/medicines/subcategories";
       if (id) {
 
-        url = `http://localhost:3000/api/medicines/subcategories?categoryId=${id}`;
+        url = `/api/medicines/subcategories?categoryId=${id}`;
       }
-      const res = await fetch(url);
-      let data = await res.json();
+      const response = await apiClient(url);
+      let data = response;
 
       if (!Array.isArray(data)) {
         data = [];
       }
-      if (res.ok) {
+      if (response) {
         setSubCategories(data);
         setFilteredSubCategories(data);
       } else {
@@ -106,11 +106,11 @@ function SubCategories() {
     const confirmDelete = await DeleteAlert();
     if (!confirmDelete) return;
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/medicines/subcategories/${id}`,
+      const response = await apiClient(
+        `/api/medicines/subcategories/${id}`,
         { method: "DELETE" }
       );
-      if (response.ok) {
+      if (response) {
         setSubCategories((prev) => prev.filter((item) => item._id !== id));
         setFilteredSubCategories((prev) => prev.filter((item) => item._id !== id));
       } else {
@@ -133,16 +133,15 @@ function SubCategories() {
     setLoading(true);
   
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/medicines/subcategories/${id}`,
+      const response = await apiClient(
+        `/api/medicines/subcategories/${id}`,
         {
           method: "PUT",
           body: fd,
         }
       );
-  
-      if (response.ok) {
-        const data = await response.json();
+
+      if (response) {
         setSubCategories((prev) =>
           prev.map((item) => (item._id === id ? { ...item, ...data } : item))
         );

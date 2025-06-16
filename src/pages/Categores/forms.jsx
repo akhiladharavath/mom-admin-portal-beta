@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
+import apiClient from '../../utils/apiClient';
 
 function MyComponent() {
   // const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -12,8 +13,7 @@ function MyComponent() {
 
   useEffect(()=>{
     if(id){
-            fetch(`http://localhost:3000/api/medicines/categories/${id}`)
-        .then(res => res.json())
+            apiClient(`/api/medicines/categories/${id}`)
         .then(data => setFormData({ category_name: data.category_name }))
         .catch(() => {});
     }
@@ -30,16 +30,15 @@ function MyComponent() {
   const handleSubmit = async(e) => {
     e.preventDefault();
    try {
-    const response = await fetch('http://localhost:3000/api/medicines/categories', {
+    const response = await apiClient('/api/medicines/categories', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(formData),
     });
-    if (response.ok) {
-      const data = await response.json();
-      console.log('Category created:', data);
+    if (response) {
+      console.log('Category created:', response);
 
       setFormData({ category_name:'' });
     } else {

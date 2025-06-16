@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
+import apiClient from '../../utils/apiClient';
 
 export default function SubCategoryModal({ isOpen, onClose, categories, onAdded }) {
   const [form, setForm] = useState({ subcategory_name: '', category: '', imageFile: null });
@@ -23,13 +24,12 @@ export default function SubCategoryModal({ isOpen, onClose, categories, onAdded 
       data.append('category', form.category);
       if (form.imageFile) data.append('imageUrl', form.imageFile);
 
-      const res = await fetch('http://localhost:3000/api/medicines/subcategories', {
+      const res = await apiClient('/api/medicines/subcategories', {
         method: 'POST',
         body: data,
       });
-      if (res.ok) {
-        const newSub = await res.json();
-        onAdded(newSub);
+      if (res) {
+        onAdded(res);
         setForm({ subcategory_name: '', category: '', imageFile: null });
         onClose();
       }

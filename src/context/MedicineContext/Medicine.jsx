@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
+import apiClient from '../../utils/apiClient';
 
 const MedicineContext = createContext();
 
@@ -6,12 +7,12 @@ export function MedicineProvider({ children }) {
   const [medicine, setMedicine] = useState([]);
 
   async function addCategory(name) {
-    const res = await fetch('http://localhost:3000/api/medicines/categories', {
+    const res = await apiClient('/api/medicines/categories', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ category_name: name }),
     });
-    return res.json();
+    return res;
   }
 
   async function addSubCategory({ name, categoryId, imageFile }) {
@@ -19,28 +20,27 @@ export function MedicineProvider({ children }) {
     form.append('subcategory_name', name);
     form.append('category', categoryId);
     form.append('imageUrl', imageFile);
-    const res = await fetch('http://localhost:3000/api/medicines/subcategories', {
+    const res = await apiClient('/api/medicines/subcategories', {
       method: 'POST',
       body: form,
     });
-    return res.json();
+    return res;
   }
 
   async function addMedicine(formData) {
-    const res = await fetch('http://localhost:3000/api/medicines/medicines', {
+    const res = await apiClient('/api/medicines/medicines', {
       method: 'POST',
       body: formData,
     });
-    const data = await res.json();
-    setMedicine(prev => [...prev, data]);
-    return data;
+
+    setMedicine(prev => [...prev, res]);
+    return res;
   }
 
-  const fetchCategories = () => fetch('http://localhost:3000/api/medicines/categories').then(r => r.json());
+  const fetchCategories = () => apiClient('/api/medicines/categories');
   const fetchSubCategories = categoryId =>
-    fetch(`http://localhost:3000/api/medicines/categories/${categoryId}/subcategories`).then(r => r.json());
-  const fetchMedicines = () =>
-    fetch('http://localhost:3000/api/medicines/medicines').then(r => r.json());
+    apiClient(`/api/medicines/categories/${categoryId}/subcategories`);
+  const fetchMedicines = () => apiClient('/api/medicines/medicines');
 
   return (
     <MedicineContext.Provider

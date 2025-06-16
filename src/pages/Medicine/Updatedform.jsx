@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import MedicineForm from "../../components/Medicines/MedicineUpdateForm";
+import apiClient from "../../utils/apiClient";
 
 
 export default function UpdateMedicinePage() {
@@ -15,14 +16,13 @@ export default function UpdateMedicinePage() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/medicines/medicines/${id}`);
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || "Fetch failed");
+        const res = await apiClient(`/api/medicines/medicines/${id}`);
+        if (!res) throw new Error("Fetch failed");
 
         setFormData({
-          ...data,
+          ...res,
           imageFile: null,
-          imageUrl: data.imageUrl || ""
+          imageUrl: res.imageUrl || ""
         });
       } catch (err) {
         console.error(err);
@@ -66,12 +66,11 @@ export default function UpdateMedicinePage() {
     });
 
     try {
-      const res = await fetch(`http://localhost:3000/api/medicines/medicines/${id}`, {
+      const res = await apiClient(`/api/medicines/medicines/${id}`, {
         method: "PUT",
         body: fd
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Update failed");
+      if (!res) throw new Error("Update failed");
       alert("Medicine updated!");
       navigate("/medicines");
     } catch (err) {

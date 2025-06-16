@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import DeleteAlert from '../../components/Medicines/Deletealert';
 import { BsFillTrashFill, BsFillPencilFill } from 'react-icons/bs';
+import apiClient from '../../utils/apiClient';
 
 const PaginatedTable = () => {
   const Navigate = useNavigate();
@@ -26,7 +27,7 @@ const PaginatedTable = () => {
     if (!confirmDelete) return;
 
     try {
-      await fetch(`http://localhost:3000/api/medicines/medicines/${id}`, {
+      await apiClient(`/api/medicines/medicines/${id}`, {
         method: "DELETE",
       });
 
@@ -51,14 +52,11 @@ const PaginatedTable = () => {
 };
   const fetchMedicines = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/medicines/medicines"
-      );
-      if (!response.ok)
+      const response = await apiClient('/api/medicines/medicines');
+      if (!response)
         throw new Error(`HTTP error! status: ${response.status}`);
-      const json = await response.json();
-      setData(json);
-      setFilteredData(json);
+      setData(response);
+      setFilteredData(response);
     } catch (err) {
       console.error("Error fetching medicines:", err);
     }
@@ -66,12 +64,9 @@ const PaginatedTable = () => {
 
   const fetchSubCategory = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:3000/api/medicine/subcategories"
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setSubCategory(data);
+      const response = await apiClient('/api/medicine/subcategories');
+      if (response) {
+        setSubCategory(response);
       } else {
         console.error("Failed to fetch categories");
       }
@@ -96,12 +91,9 @@ const PaginatedTable = () => {
 
   const SingleSubCategory = async (id) => {
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/medicine/subcategories/${id}`
-      );
-      if (response.ok) {
-        const data = await response.json();
-        setSingleCategory(data);
+      const response = await apiClient(`/api/medicine/subcategories/${id}`);
+      if (response) {
+        setSingleCategory(response);
       }
     } catch (error) {}
   };

@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router';
 import ReusableTable from '../../components/TableComponent/TableComponent';
 import { useEffect, useState } from 'react';
 import DeleteAlert from '../../components/Medicines/Deletealert';
+import apiClient from '../../utils/apiClient';
 
 
 const columns = [
@@ -36,27 +37,23 @@ export default function CategoryPage() {
   const [rows, setRows] = useState([]);
   const [filteredRows, setFilteredRows] = useState([]);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch(
-          "http://localhost:3000/api/medicines/categories"
-        );
-        const json = await response.json();
-
-        if (response.ok) {
-          setRows(json);
-          setFilteredRows(json); 
-        } else {
-          console.log("error");
-        }
-      } catch (err) {
+ useEffect(() => {
+  const fetchCategories = async () => {
+    try {
+      const data = await apiClient('/api/medicines/categories');
+      if (data) {
+        setRows(data);
+        setFilteredRows(data);
+      } else {
         console.log("error");
       }
-    };
+    } catch (err) {
+      console.log("error");
+    }
+  };
 
-    fetchCategories();
-  }, []);
+  fetchCategories();
+}, []);
 
   const handleSearch = (value) => {
     const searchValue = value.toLowerCase();
@@ -72,10 +69,10 @@ export default function CategoryPage() {
     const confirmDelete = await DeleteAlert()
     if (!confirmDelete) return;
     try {
-      const response = await fetch(`http://localhost:3000/api/medicines/categories/${id}`, {
+      const response = await apiClient(`/api/medicines/categories/${id}`, {
         method: 'DELETE',
       });
-      if (response.ok) {
+      if (response) {
         setRows(rows => rows.filter(item => item._id !== id));
         setFilteredRows(rows => rows.filter(item => item._id !== id));
       } else {
@@ -88,12 +85,12 @@ export default function CategoryPage() {
 
   const handleEditSave = async (id, newName) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/medicines/categories/${id}`, {
+      const response = await apiClient(`/api/medicines/categories/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ category_name: newName }),
       });
-      if (response.ok) {
+      if (response) {
         setRows(rows => rows.map(item =>
           item._id === id ? { ...item, category_name: newName } : item
         ));
@@ -119,7 +116,7 @@ export default function CategoryPage() {
 
       <ReusableTable
         columns={columns}
-        rows={filteredRows}
+        rows={filteredRows || []}
         onDelete={handleDelete}
         onEditSave={handleEditSave}
       />

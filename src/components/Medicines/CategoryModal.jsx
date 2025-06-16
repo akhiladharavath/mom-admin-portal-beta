@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
+import apiClient from '../../utils/apiClient';
 
 export default function CategoryModal({ isOpen, onClose, onAdded }) {
   const [name, setName] = useState('');
@@ -9,14 +10,13 @@ export default function CategoryModal({ isOpen, onClose, onAdded }) {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:3000/api/medicines/categories', {
+      const res = await apiClient('/api/medicines/categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ category_name: name }),
       });
-      if (res.ok) {
-        const data = await res.json();
-        onAdded(data);
+      if (res) {
+        onAdded(res);
         setName('');
         onClose();
       }

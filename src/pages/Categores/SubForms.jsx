@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import apiClient from '../../utils/apiClient';
 
 function SubForms() {
   const [formData, setFormData] = useState({
@@ -16,10 +17,9 @@ function SubForms() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/medicines/categories');
-      if (response.ok) {
-        const data = await response.json();
-        setCategories(data);
+      const response = await apiClient('/api/medicines/categories');
+      if (response) {
+        setCategories(response);
       } else {
         console.error('Failed to fetch categories');
       }
@@ -58,11 +58,11 @@ function SubForms() {
         data.append('imageUrl', formData.imageFile);
       }
 
-      const response = await fetch('http://localhost:3000/api/medicines/subcategories', {
+      const response = await apiClient('/api/medicines/subcategories', {
         method: 'POST',
         body: data,
       });
-      if (response.ok) {
+      if (response) {
         setFormData({
           subcategory_name: '',
           category: '',

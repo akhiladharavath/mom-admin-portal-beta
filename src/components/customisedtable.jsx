@@ -10,6 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
+import apiClient from '../utils/apiClient';
 
 
 const columns = [
@@ -88,18 +89,17 @@ export default function StickyHeadTable() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch('http://localhost:3000/api/user/');
-        const json = await response.json();
-        console.log('API Response:', json);
+        const response = await apiClient('/api/user/');
+        console.log('API Response:', response);
 
-        if (!Array.isArray(json.users)) {
+        if (!Array.isArray(response.users)) {
           setError('Error: users is not an array');
           console.error('Error: users is not an array');
           return;
         }
 
-        if (response.ok) {
-          const formattedData = json.users.map((user) =>
+        if (response) {
+          const formattedData = response.users.map((user) =>
             createData(
               user.name,
               user.mobileNo,
